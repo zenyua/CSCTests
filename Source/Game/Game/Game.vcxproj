@@ -166,11 +166,14 @@
     <ClCompile Include="Main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Engine\Audio\Audio.vcxproj">
+      <Project>{b7caa3e5-601e-4264-b97d-6a4e81322afc}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\..\Engine\Core\Core.vcxproj">
       <Project>{1b353c53-715b-444a-9d3c-08a787b4838c}</Project>
     </ProjectReference>
     <ProjectReference Include="..\..\Engine\Input\Input.vcxproj">
-      <Project>{1c9e9eb0-b2aa-47c5-94f5-27dc284c63b5}</Project>
+      <Project>{6cc87b35-c654-42ba-8c8f-2ecc020d0926}</Project>
     </ProjectReference>
     <ProjectReference Include="..\..\Engine\Renderer\Renderer.vcxproj">
       <Project>{1c40df35-b0ec-435c-9a42-4523173d4d03}</Project>
