@@ -2,20 +2,22 @@
 
 #include "Renderer/Renderer.h"
 #include "Renderer/Model.h"
+#include "Renderer/Font.h"
+#include "Renderer/Text.h"
 
-#include "Input/InputSystem.h"
+#include "Input/Inputsystem.h"
 
-#include "Audio/AudioSystem.h"
+#include "Audio/Audiosystem.h"
 
 #include <iostream>
 #include <vector>
-#include <SDL2-2.28.0/include/SDL.h>
 
 using vec2 = ringo::Vector2;
 
 int main(int argc, char* argv[]) {
 	//set up memory
 	ringo::MemoryTracker::Initialize();
+	ringo::MemoryTracker::DisplayInfo();
 
 	//set file path
 	ringo::setFilePath("assets");
@@ -27,16 +29,21 @@ int main(int argc, char* argv[]) {
 
 	//set up models
 	ringo::Model model;
-	std::cout << ringo::getFilePath();
+	std::cout << ringo::getFilePath() << std::endl;
 	model.Load("cat.txt");
 
 	//set up renderer
 	ringo::Renderer renderer;
 	renderer.Initialize();
-	renderer.CreateWindow("CSC196", 800, 600);
+	renderer.CreateWindow("csc196", 800, 600);
 
 	//set up input
 	ringo::g_inputSystem.Initialize();
+
+	//set up text
+	std::shared_ptr<ringo::Font> font = std::make_shared<ringo::Font>("organo.ttf", 48);
+	std::unique_ptr<ringo::Text> text = std::make_unique<ringo::Text>(font);
+	text->Create(renderer, "mewmont", ringo::Color{1,1,1,1});
 
 	bool quit = false;
 	while (!quit) {
@@ -52,36 +59,43 @@ int main(int argc, char* argv[]) {
 		}
 
 		if (ringo::g_inputSystem.GetMouseButtonDown(0) && !ringo::g_inputSystem.GetMousePrevButtonDown(0)) {
-			std::cout << "Left down.\n";
+			std::cout << "left down.\n";
 			std::cout << "x: " << ringo::g_inputSystem.GetMousePosition().x;
 			std::cout << " y: " << ringo::g_inputSystem.GetMousePosition().y;
 			std::cout << "\n";
 		}
 		if (ringo::g_inputSystem.GetMouseButtonDown(1) && !ringo::g_inputSystem.GetMousePrevButtonDown(1)) {
-			std::cout << "Middle down.\n";
+			std::cout << "middle down.\n";
 			std::cout << "x: " << ringo::g_inputSystem.GetMousePosition().x;
 			std::cout << " y: " << ringo::g_inputSystem.GetMousePosition().y;
 			std::cout << "\n";
 		}
 		if (ringo::g_inputSystem.GetMouseButtonDown(2) && !ringo::g_inputSystem.GetMousePrevButtonDown(2)) {
-			std::cout << "Right down.\n";
+			std::cout << "right down.\n";
 			std::cout << "x: " << ringo::g_inputSystem.GetMousePosition().x;
 			std::cout << " y: " << ringo::g_inputSystem.GetMousePosition().y;
 			std::cout << "\n";
 		}
 
-		//my test loop
+
 		SDL_Event event;
 		while (SDL_PollEvent(&event)) {
 			if (event.type == SDL_QUIT) {
 				return 0;
 			}
 		}
-		renderer.SetColor(0, 0, 0, 0);
+
+		renderer.SetColor(255, 255, 255, 0);
 		renderer.BeginFrame();
-		renderer.SetColor(255, 255, 255, 255);
+		renderer.SetColor(1, 1, 1, 255);
+
 
 		model.Draw(renderer, { 500,500 }, 0, 10);
+
+		renderer.SetColor(1, 1, 1, 255);
+		text->Draw(renderer, 500, 500);
+		//text->draw(renderer, 0, 300);
+		//text->draw(renderer, 300, 0);
 
 		renderer.EndFrame();
 	};

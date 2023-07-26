@@ -19,6 +19,7 @@ namespace ringo {
 
 		void SetColor(int r, int g, int b, int a);
 		void DrawLine(int x1, int y1, int x2, int y2);
+		friend class Text;
 	private:
 		int m_width = 0;
 		int m_height = 0;
