@@ -32,9 +32,8 @@ int main(int argc, char* argv[]) {
 	std::cout << ringo::getFilePath() << std::endl;
 	model.Load("cat.txt");
 	ringo::Transform transform;
-	transform.position = { 0,0 };
-	int speed = 50;
-	ringo::vec2 direction{500, 500};
+	transform.position = {400, 400};
+	int speed = 5;
 
 	//set up renderer
 	ringo::Renderer renderer;
@@ -66,17 +65,13 @@ int main(int argc, char* argv[]) {
 			ringo::g_audioSystem.PlayOneShot("laser");
 		}
 		//player movement stuff
-		
-		/*if (ringo::g_inputSystem.GetKeyDown(SDL_SCANCODE_W)) direction.y = -1;
+		ringo::vec2 direction{0, 0};
+		if (ringo::g_inputSystem.GetKeyDown(SDL_SCANCODE_W)) direction.y = -1;
 		if (ringo::g_inputSystem.GetKeyDown(SDL_SCANCODE_S)) direction.y = 1;
 		if (ringo::g_inputSystem.GetKeyDown(SDL_SCANCODE_A)) direction.x = -1;
 		if (ringo::g_inputSystem.GetKeyDown(SDL_SCANCODE_D)) direction.x = 1;
-		direction = direction * speed * ringo::g_time.GetDeltaTime();*/
-
-		//---------------------------------------
+		direction = direction * speed * ringo::g_time.GetDeltaTime();
 		transform.position = transform.position + direction;
-		//transform.position = { 500,500 };
-		//--------------------------------------
 
 		//SDL_Event loop
 		SDL_Event event;
