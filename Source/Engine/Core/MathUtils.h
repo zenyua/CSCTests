@@ -10,6 +10,10 @@ namespace ringo {
 	constexpr float DegreesToRadians(float degrees) { return degrees * (Pi / 180.0f); }
 
 	template<typename T>
+	inline T Min(T a, T b) {
+		return (a < b) ? a : b;
+	}
+	template<typename T>
 	inline T Clamp(T value, T min, T max) {
 		return (value < min) ? min : (value > max) ? max : value;
 	}
