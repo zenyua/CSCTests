@@ -9,6 +9,13 @@ namespace ringo {
 	constexpr float RadiansToDegrees(float radians) { return radians * (180.0f / Pi); }
 	constexpr float DegreesToRadians(float degrees) { return degrees * (Pi / 180.0f); }
 
+	constexpr int Wrap(int value, int max) {
+		return (value % max) + ((value < 0) ? max : 0);
+	}
+	inline float Wrap(float value, float max) {
+		return std::fmod(value, max) + ((value < 0) ? max : 0);
+	}
+
 	template<typename T>
 	inline T Min(T a, T b) {
 		return (a < b) ? a : b;

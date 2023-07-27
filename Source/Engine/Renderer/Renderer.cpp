@@ -2,6 +2,7 @@
 #include "SDL2-2.28.0/include/SDL_ttf.h"
 
 namespace ringo {
+	Renderer g_renderer;
 	//SDL_Renderer* renderer{ nullptr };
 	//SDL_Window* window{ nullptr };
 	bool Renderer::Initialize()

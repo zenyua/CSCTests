@@ -9,6 +9,8 @@
 
 #include "Audio/Audiosystem.h"
 
+#include "Mewmont.h"
+
 #include <iostream>
 #include <vector>
 
@@ -18,6 +20,9 @@ int main(int argc, char* argv[]) {
 	//set up memory
 	ringo::MemoryTracker::Initialize();
 	ringo::MemoryTracker::DisplayInfo();
+
+	//set up random
+	ringo::seedRandom((unsigned int)time(nullptr));
 
 	//set file path
 	ringo::setFilePath("assets");
@@ -36,42 +41,40 @@ int main(int argc, char* argv[]) {
 	int speed = 5;
 
 	//set up renderer
-	ringo::Renderer renderer;
-	renderer.Initialize();
-	renderer.CreateWindow("csc196", 800, 600);
+	ringo::g_renderer.Initialize();
+	ringo::g_renderer.CreateWindow("csc196", 800, 600);
+
+	//set up game
+	std::unique_ptr<Mewmont> game = std::make_unique<Mewmont>();
+	game->Initialize();
 
 	//set up input
 	ringo::g_inputSystem.Initialize();
 
-	//set up text
-	std::shared_ptr<ringo::Font> font = std::make_shared<ringo::Font>("organo.ttf", 48);
-	std::unique_ptr<ringo::Text> text = std::make_unique<ringo::Text>(font);
-	text->Create(renderer, "mewmont", ringo::Color{1,1,1,1});
-
 	bool quit = false;
 	while (!quit) {
+		//renderer setup
+		ringo::g_renderer.SetColor(255, 255, 255, 0);
+		ringo::g_renderer.BeginFrame();
+		ringo::g_renderer.SetColor(1, 1, 1, 255);
+
 		//time stuff
 		ringo::g_time.Tick();
+
 		//inputSystem stuff
 		ringo::g_inputSystem.Update();
+
 		//check if ending game
 		if (ringo::g_inputSystem.GetKeyDown(SDL_SCANCODE_ESCAPE)) {
 			quit = true;
 		}
+
+		//update game
+		game->Update(ringo::g_time.GetDeltaTime());
+		game->Draw(ringo::g_renderer);
+
 		//audio system stuff
 		ringo::g_audioSystem.Update();
-		if (ringo::g_inputSystem.GetKeyDown(SDL_SCANCODE_SPACE)) {
-			ringo::g_audioSystem.PlayOneShot("meow");
-			ringo::g_audioSystem.PlayOneShot("laser");
-		}
-		//player movement stuff
-		ringo::vec2 direction{0, 0};
-		if (ringo::g_inputSystem.GetKeyDown(SDL_SCANCODE_W)) direction.y = -1;
-		if (ringo::g_inputSystem.GetKeyDown(SDL_SCANCODE_S)) direction.y = 1;
-		if (ringo::g_inputSystem.GetKeyDown(SDL_SCANCODE_A)) direction.x = -1;
-		if (ringo::g_inputSystem.GetKeyDown(SDL_SCANCODE_D)) direction.x = 1;
-		direction = direction * speed * ringo::g_time.GetDeltaTime();
-		transform.position = transform.position + direction;
 
 		//SDL_Event loop
 		SDL_Event event;
@@ -81,16 +84,7 @@ int main(int argc, char* argv[]) {
 			}
 		}
 
-		//renderer setup
-		renderer.SetColor(255, 255, 255, 0);
-		renderer.BeginFrame();
-		renderer.SetColor(1, 1, 1, 255);
-
-		//draw objects
-		model.Draw(renderer, transform.position, 0, 10);
-		text->Draw(renderer, 500, 500);
-
-		renderer.EndFrame();
+		ringo::g_renderer.EndFrame();
 	};
 
 	ringo::MemoryTracker::DisplayInfo();
@@ -118,3 +112,12 @@ int main(int argc, char* argv[]) {
 //	std::cout << " y: " << ringo::g_inputSystem.GetMousePosition().y;
 //	std::cout << "\n";
 //}
+
+//player movement stuff
+		/*ringo::vec2 direction{0, 0};
+		if (ringo::g_inputSystem.GetKeyDown(SDL_SCANCODE_W)) direction.y = -1;
+		if (ringo::g_inputSystem.GetKeyDown(SDL_SCANCODE_S)) direction.y = 1;
+		if (ringo::g_inputSystem.GetKeyDown(SDL_SCANCODE_A)) direction.x = -1;
+		if (ringo::g_inputSystem.GetKeyDown(SDL_SCANCODE_D)) direction.x = 1;
+		direction = direction * speed * ringo::g_time.GetDeltaTime();
+		transform.position = transform.position + direction;*/

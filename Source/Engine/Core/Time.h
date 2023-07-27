@@ -20,13 +20,17 @@ namespace ringo {
 		clock_rep GetElapsedMilliseconds();
 		float GetElapsedSeconds();
 		float GetTime() const { return m_time; }
-		float GetDeltaTime() { return m_deltaTime; }
+		float GetDeltaTime() { return m_deltaTime * m_timeScale; }
+		float GetUnscaledDeltaTime() const { return m_deltaTime; }
 
+		float GetTimeScale() { return m_timeScale; }
+		void SetTimeScale(float timeScale) { m_timeScale = timeScale; }
 	private:
 		clock::time_point m_startTime;
 		clock::time_point m_frameTime;
 		float m_time = 0;
 		float m_deltaTime = 0;
+		float m_timeScale = 1;
 	};
 
 	extern Time g_time;

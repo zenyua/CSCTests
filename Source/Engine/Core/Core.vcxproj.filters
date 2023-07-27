@@ -31,6 +31,9 @@
     <ClInclude Include="Time.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="Random.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="FileIO.cpp">
