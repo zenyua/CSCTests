@@ -22,9 +22,12 @@ namespace ringo {
 
 		int GetLives() const { return m_lives; }
 		void SetLives(int lives) { m_lives = lives; }
+
+		void AddMoney(int money) { m_money += money; }
 	protected:
 		std::unique_ptr<Scene> m_scene;
 
+		int m_money = 0;
 		int m_score = 0;
 		int m_lives = 0;
 	};

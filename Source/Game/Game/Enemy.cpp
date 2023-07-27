@@ -42,6 +42,7 @@ void Enemy::OnCollision(Actor* other)
 {
 	if (other->m_tag == "Weapon") {
 		m_game->AddPoints(100);
+		m_game->AddMoney(10);
 		m_destroyed = true;
 		ringo::EmitterData data;
 		data.burst = true;

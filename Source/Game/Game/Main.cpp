@@ -32,17 +32,9 @@ int main(int argc, char* argv[]) {
 	ringo::g_audioSystem.AddAudio("meow", "meow.wav");
 	ringo::g_audioSystem.AddAudio("laser", "laser.wav");
 
-	//set up models
-	ringo::Model model;
-	std::cout << ringo::getFilePath() << std::endl;
-	model.Load("cat.txt");
-	ringo::Transform transform;
-	transform.position = {400, 400};
-	int speed = 5;
-
 	//set up renderer
 	ringo::g_renderer.Initialize();
-	ringo::g_renderer.CreateWindow("csc196", 800, 600);
+	ringo::g_renderer.CreateWindow("csc196", 1920, 1080);
 
 	//set up game
 	std::unique_ptr<Mewmont> game = std::make_unique<Mewmont>();

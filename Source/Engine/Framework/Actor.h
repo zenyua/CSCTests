@@ -36,7 +36,7 @@ namespace ringo {
 
 		std::shared_ptr<Model> m_model;
 
-		vec2 m_velocity;
+		vec2 m_velocity = 0;
 		//slows stuff down if it's closer to 1
 		float m_damping = 0;
 	};

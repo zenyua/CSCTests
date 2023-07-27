@@ -1,6 +1,7 @@
 #include "Mewmont.h"
 #include "Player.h"
 #include "Enemy.h"
+#include "Tower.h"
 
 #include "Audio/AudioSystem.h"
 #include "Input/InputSystem.h"
@@ -22,10 +23,15 @@ bool Mewmont::Initialize()
 	m_gameOverText->Create(ringo::g_renderer, "Game Over", ringo::Color{1, 1, 1, 1});
 	m_scoreTitleText = std::make_unique<ringo::Text>(m_font);
 	m_scoreTitleText->Create(ringo::g_renderer, "High Scores", ringo::Color{1, 1, 1, 1});
+	m_moneyText = std::make_unique<ringo::Text>(m_font);
 
+	//set up scores
 	for (int i = 0; i < m_scoresTexts.size(); i++)
 	{
 		m_scoresTexts[i] = std::make_unique<ringo::Text>(m_font);
+	}
+	for (int score : m_scores) {
+		score = 0;
 	}
 
 	//set up audio
@@ -35,10 +41,6 @@ bool Mewmont::Initialize()
 
 	//create scene
 	m_scene = std::make_unique<ringo::Scene>();
-
-	for (int score : m_scores) {
-		score = 0;
-	}
 
 	return true;
 }
@@ -70,7 +72,7 @@ void Mewmont::Update(float dt)
 		transform.scale = 10;
 		std::shared_ptr<ringo::Model> model = std::make_shared<ringo::Model>();
 		model->Load("cat.txt");
-		std::unique_ptr<Player> player = std::make_unique<Player>(1,0.1f,transform,model,this);
+		std::unique_ptr<Player> player = std::make_unique<Player>(2,0.1f,transform,model,this);
 		player->m_tag = "Player";
 		m_scene->Add(std::move(player));
 
@@ -82,6 +84,10 @@ void Mewmont::Update(float dt)
 		transformH3.scale = 4;
 		transformH2.scale = 4;
 		transformH1.scale = 4;
+
+		//tower model
+		m_tower->Load("tower.txt");
+
 		m_state = eState::Game;
 		break;
 	}
@@ -98,31 +104,23 @@ void Mewmont::Update(float dt)
 		}
 		if (ringo::g_inputSystem.GetKeyDown(SDL_SCANCODE_SPACE) && !ringo::g_inputSystem.GetPrevKeyDown(SDL_SCANCODE_SPACE)) {
 			ringo::g_audioSystem.PlayOneShot("laser");
-
 		}
-		//
-		if (ringo::g_inputSystem.GetKeyDown(SDL_SCANCODE_E) && !ringo::g_inputSystem.GetPrevKeyDown(SDL_SCANCODE_E)) {
-			ringo::EmitterData data;
-			data.burst = true;
-			data.burstCount = 100;
-			data.spawnRate = 200;
-			data.angle = 0;
-			data.angleRange = ringo::Pi;
-			data.lifetimeMin = 0.5f;
-			data.lifetimeMin = 1.5f;
-			data.speedMin = 50;
-			data.speedMax = 250;
-			data.damping = 0.5f;
-			data.color = ringo::Color{ 1, 0, 0, 1 };
-			ringo::Transform transform{ { ringo::g_inputSystem.GetMousePosition() }, 0, 1 };
-			auto emitter = std::make_unique<ringo::Emitter>(transform, data);
-			emitter->m_lifespan = 1.0f;
-			m_scene->Add(std::move(emitter));
+		if (ringo::g_inputSystem.GetMouseButtonDown(0) && !ringo::g_inputSystem.GetMousePrevButtonDown(0) && m_money >= 50) {
+			m_money -= 50;
+			ringo::Transform transform;
+			transform.position = ringo::g_inputSystem.GetMousePosition();
+			transform.scale = 5;
+			transform.rotation = ringo::randomf(360);
+			std::unique_ptr<Tower> tower = std::make_unique<Tower>(5,transform,m_tower);
+			tower->m_tag = "Tower";
+			tower->m_game = this;
+			m_scene->Add(std::move(tower));
 		}
+		m_moneyText->Create(ringo::g_renderer, "Gold: " + std::to_string(m_money), ringo::Color{1, 1, 1, 1});
 		break;
 	}
 	case eState::PlayerDeadStart:
-		m_stateTimer = 50;
+		m_stateTimer = 30;
 		if (m_lives <= 0) {
 			m_state = eState::GameOverStart;
 		}
@@ -167,7 +165,7 @@ void Mewmont::Draw(ringo::Renderer& renderer)
 	if (m_state == eState::Game) {
 		ringo::g_particleSystem.Draw(renderer);
 		m_scoreText->Draw(renderer, 0, 0);
-
+		m_moneyText->Draw(renderer, 1300, 20);
 		switch (m_lives) {
 		case 1:
 			m_heart->Draw(renderer, transformH3);

@@ -25,7 +25,7 @@ namespace ringo {
 			vec2 point;
 			stream >> point;
 
-			m_points.push_back(point); //problem spot
+			m_points.push_back(point);
 		}
 
 		return true;

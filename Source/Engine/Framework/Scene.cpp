@@ -18,8 +18,6 @@ namespace ringo {
 			else {
 				iter++; // Move the iterator forward if the element was not erased
 			}
-			
-			
 		}
 		//check collisions
 		for (auto iter1 = m_actors.begin(); iter1 != m_actors.end(); iter1++) {

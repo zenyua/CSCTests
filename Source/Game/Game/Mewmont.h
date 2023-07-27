@@ -35,7 +35,8 @@ private:
 
 	std::array<int, 7> m_scores;
 	std::array<std::unique_ptr<ringo::Text>, 7> m_scoresTexts;
-
+	
+	std::shared_ptr<ringo::Model> m_tower = std::make_shared<ringo::Model>();
 	std::shared_ptr<ringo::Model> m_heart = std::make_shared<ringo::Model>();
 
 	ringo::Transform transformH3;
@@ -49,4 +50,5 @@ private:
 	std::unique_ptr<ringo::Text> m_titleText;
 	std::unique_ptr<ringo::Text> m_scoreTitleText;
 	std::unique_ptr<ringo::Text> m_gameOverText;
+	std::unique_ptr<ringo::Text> m_moneyText;
 };
